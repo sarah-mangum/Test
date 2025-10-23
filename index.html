@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape Room: Locked Drawer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f4f4f4;
+    }
+
+
+    .drawer {
+      width: 320px; /* slightly wider */
+      height: 270px; /* taller drawer */
+      background: linear-gradient(to bottom, #8B4513, #A0522D);
+      border: 4px solid #5C4033;
+      border-radius: 10px;
+      margin: auto;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 1s ease;
+    }
+    
+    .drawer.open {
+      transform: translateY(50px);
+    }
+    
+    .handle {
+      width: 60px;
+      height: 10px;
+      background: #333;
+      border-radius: 5px;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .keypad {
+      position: absolute;
+      top: 60px; /* now sits below the handle */
+      left: 70%;
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+    
+    .keypad button {
+      width: 45px;
+      height: 45px;
+      font-size: 1.2em;
+      background: #eee;
+      border: 2px solid #999;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .keypad button:hover {
+      background: #ddd;
+    }
+
+    #codeDisplay {
+      margin-top: 20px;
+      font-size: 1.2em;
+      letter-spacing: 5px;
+    }
+
+    .hidden {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .mirror {
+      width: 200px;
+      height: 100px;
+      margin: 30px auto;
+      background: #ccc;
+      border: 2px solid #999;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .mirror-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5em;
+      color: #222;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mirror:hover .mirror-text {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escape Room: Locked Drawer</h1>
+
+  <div class="mirror">
+    <div class="mirror-text">Code: 4729</div>
+  </div>
+
+  <div class="drawer" id="drawer">
+    <div class="handle"></div>
+    <div class="keypad">
+      <button onclick="pressKey('1')">1</button>
+      <button onclick="pressKey('2')">2</button>
+      <button onclick="pressKey('3')">3</button>
+      <button onclick="pressKey('4')">4</button>
+      <button onclick="pressKey('5')">5</button>
+      <button onclick="pressKey('6')">6</button>
+      <button onclick="pressKey('7')">7</button>
+      <button onclick="pressKey('8')">8</button>
+      <button onclick="pressKey('9')">9</button>
+      <button onclick="pressKey('0')">0</button>
+      <button onclick="backspace()">←</button>
+      <button onclick="checkCode()">✔</button>
+    </div>
+  </div>
+
+  <div id="codeDisplay">Code: <span id="codeInput"></span></div>
+  <p id="message"></p>
+  <div id="item" class="hidden">
+    🎉 You found a key inside the drawer!
+  </div>
+
+  <script>
+    const correctCode = "4729";
+    let enteredCode = "";
+
+    function pressKey(num) {
+      if (enteredCode.length < 4) {
+        enteredCode += num;
+        document.getElementById("codeInput").textContent = enteredCode;
+      }
+    }
+
+    function backspace() {
+      enteredCode = enteredCode.slice(0, -1);
+      document.getElementById("codeInput").textContent = enteredCode;
+    }
+
+    function checkCode() {
+      const message = document.getElementById("message");
+      const item = document.getElementById("item");
+      const drawer = document.getElementById("drawer");
+
+      if (enteredCode === correctCode) {
+        message.textContent = "Drawer unlocked!";
+        item.classList.remove("hidden");
+        drawer.classList.add("open");
+      } else {
+        message.textContent = "Wrong code. Try again.";
+      }
+
+      enteredCode = "";
+      document.getElementById("codeInput").textContent = "";
+    }
+  </script>
+</body>
+</html>
