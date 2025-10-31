@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Escape Room: Locked Drawer</title>
+  <meta charset="UTF-8" />
+  <title>Escape Room Adventure</title>
   <style>
     body {
       font-family: sans-serif;
@@ -10,6 +10,14 @@
       padding: 50px;
       background: #f4f4f4;
       position: relative;
+    }
+
+    .scene {
+      display: none;
+    }
+
+    .scene.active {
+      display: block;
     }
 
     .mirror {
@@ -116,11 +124,12 @@
       opacity: 0;
       transition: transform 1s ease, opacity 0.5s ease;
       z-index: 10;
+      cursor: pointer;
     }
 
     .drawer.open ~ #key {
       opacity: 1;
-      transform: translate(-50%, -80px);
+      transform: translate(-50%, -20px);
     }
 
     .light-switch {
@@ -144,76 +153,238 @@
     .light-switch:hover {
       background: #ccc;
     }
+
+    #trunk {
+      width: 320px;
+      height: 180px;
+      margin: 40px auto;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    #trunk-lid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to bottom, #4b2e1e, #6b3f2c);
+      border-bottom: 4px solid #3e2a1c;
+      transform-origin: bottom center;
+      transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transition: transform 1s ease;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    #trunk.open #trunk-lid {
+      transform: rotateX(-140deg);
+    }
+
+    #trunk-base {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to top, #4b2e1e, #6b3f2c);
+      border: 4px solid #3e2a1c;
+      border-radius: 0 0 12px 12px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+
+    #keyhole {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 60px;
+      background: radial-gradient(circle at center, #d4af37 60%, #b8860b 100%);
+      border: 3px solid #8b7500;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 0 6px #333;
+      z-index: 3;
+      cursor: pointer;
+    }
+
+    #keyhole::after {
+      content: '';
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 20px;
+      background: #333;
+      border-radius: 2px;
+    }
+
+
+    #letterClue {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #fdf5e6;
+      border: 2px solid #d2b48c;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-family: 'Georgia', serif;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: slideDown 1s ease forwards;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #cryptexPuzzle {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #cryptexInput {
+      font-size: 1.2em;
+      letter-spacing: 5px;
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>Escape Room: Locked Drawer</h1>
+  <!-- Scene 1 -->
+  <div class="scene active" id="scene1">
+    <h1>Escape Room: Locked Drawer</h1>
 
-  <div class="mirror" id="mirror">
-    <div class="mirror-text">Code: 4729</div>
-  </div>
-
-  <div class="drawer-container">
-    <div class="drawer" id="drawer">
-      <div class="handle"></div>
-      <div class="keypad">
-        <button onclick="pressKey('1')">1</button>
-        <button onclick="pressKey('2')">2</button>
-        <button onclick="pressKey('3')">3</button>
-        <button onclick="pressKey('4')">4</button>
-        <button onclick="pressKey('5')">5</button>
-        <button onclick="pressKey('6')">6</button>
-        <button onclick="pressKey('7')">7</button>
-        <button onclick="pressKey('8')">8</button>
-        <button onclick="pressKey('9')">9</button>
-        <button onclick="pressKey('0')">0</button>
-        <button onclick="backspace()">←</button>
-        <button onclick="checkCode()">✔</button>
-      </div>
+    <div class="mirror" id="mirror">
+      <div class="mirror-text">Code: 4729</div>
     </div>
-    <div id="key">🗝️</div>
+
+    <div class="drawer-container">
+      <div class="drawer" id="drawer">
+        <div class="handle"></div>
+        <div class="keypad">
+          <button onclick="pressKey('1')">1</button>
+          <button onclick="pressKey('2')">2</button>
+          <button onclick="pressKey('3')">3</button>
+          <button onclick="pressKey('4')">4</button>
+          <button onclick="pressKey('5')">5</button>
+          <button onclick="pressKey('6')">6</button>
+          <button onclick="pressKey('7')">7</button>
+          <button onclick="pressKey('8')">8</button>
+          <button onclick="pressKey('9')">9</button>
+          <button onclick="pressKey('0')">0</button>
+          <button onclick="backspace()">←</button>
+          <button onclick="checkCode()">✔</button>
+        </div>
+      </div>
+      <div id="key" onclick="goToTrunkScene()">🗝️</div>
+    </div>
+
+    <div class="light-switch" onclick="toggleLight()">💡</div>
+
+    <div id="codeDisplay">Code: <span id="codeInput"></span></div>
+    <p id="message"></p>
   </div>
 
-  <div class="light-switch" onclick="toggleLight()">💡</div>
+  <!-- Scene 2 -->
+  <div class="scene" id="scene2">
+    <h1>The Trunk</h1>
+    <div id="trunk">
+      <div id="trunk-lid"></div>
+      <div id="trunk-base"></div>
+      <div id="keyhole" onclick="openTrunk()"></div>
+    </div>
 
-  <div id="codeDisplay">Code: <span id="codeInput"></span></div>
-  <p id="message"></p>
+    <div id="letterClue">
+      <p>Dearest Evelyn,</p>
+      <p>If you’ve found this, then the old trunk has finally been opened. I knew you’d be the one to solve it.</p>
+      <p>The answer lies in the tradition we cherished every October 31st — when costumes came out, lanterns were lit, and laughter echoed through the halls. Remember the joy of knocking on doors, the thrill of the unknown, and the sweet reward that always followed?</p>
+      <p>That word — the one whispered with glee by children in the night — is the key to what comes next.</p>
+      <p>With love,<br>Grandfather</p>
+    </div>
 
-  <script>
-    const correctCode = "4729";
-    let enteredCode = "";
+    <div id="cryptexPuzzle">
+      <p>Enter the 5-letter word to unlock the cryptex:</p>
+      <input type="text" id="cryptexInput" maxlength="5" />
+      <button onclick="checkCryptex()">Unlock</button>
+      <p id="cryptexMessage"></p>
+    </div>
+  </div>
 
-    function pressKey(num) {
-      if (enteredCode.length < 4) {
-        enteredCode += num;
-        document.getElementById("codeInput").textContent = enteredCode;
-      }
-    }
 
-    function backspace() {
-      enteredCode = enteredCode.slice(0, -1);
+<script>
+  // Scene 1: Drawer puzzle
+  const correctCode = "4729";
+  let enteredCode = "";
+
+  function pressKey(num) {
+    if (enteredCode.length < 4) {
+      enteredCode += num;
       document.getElementById("codeInput").textContent = enteredCode;
     }
+  }
 
-    function checkCode() {
-      const message = document.getElementById("message");
-      const drawer = document.getElementById("drawer");
-      const key = document.getElementById("key");
+  function backspace() {
+    enteredCode = enteredCode.slice(0, -1);
+    document.getElementById("codeInput").textContent = enteredCode;
+  }
 
-      if (enteredCode === correctCode) {
-        message.textContent = "Drawer unlocked!";
-        drawer.classList.add("open");
-      } else {
-        message.textContent = "Wrong code. Try again.";
-      }
+  function checkCode() {
+    const message = document.getElementById("message");
+    const drawer = document.getElementById("drawer");
 
-      enteredCode = "";
-      document.getElementById("codeInput").textContent = "";
+    if (enteredCode === correctCode) {
+      message.textContent = "Drawer unlocked!";
+      drawer.classList.add("open");
+    } else {
+      message.textContent = "Wrong code. Try again.";
     }
 
-    function toggleLight() {
-      document.getElementById("mirror").classList.toggle("light-on");
+    enteredCode = "";
+    document.getElementById("codeInput").textContent = "";
+  }
+
+  function toggleLight() {
+    document.getElementById("mirror").classList.toggle("light-on");
+  }
+
+  // Scene transition: key click → trunk scene
+  function goToTrunkScene() {
+    document.getElementById("scene1").classList.remove("active");
+    document.getElementById("scene2").classList.add("active");
+  }
+
+  // Trunk interaction
+  function openTrunk() {
+    const trunk = document.getElementById("trunk");
+    const lid = document.getElementById("trunk-lid");
+    const letter = document.getElementById("letterClue");
+    const puzzle = document.getElementById("cryptexPuzzle");
+
+    trunk.classList.add("open");
+    setTimeout(() => {
+      lid.style.transform = "rotateX(-140deg)";
+    }, 100); // slight delay for realism
+    
+    setTimeout(() => {
+      letter.style.display = "block";
+      puzzle.style.display = "block";
+    }, 1200); // reveal after lid opens
     }
-  </script>
-</body>
-</html>
+
+  // Cryptex puzzle
+  function checkCryptex() {
+    const input = document.getElementById("cryptexInput").value.toLowerCase();
+    const message = document.getElementById("cryptexMessage");
+    const correctWord = "treat";
+
+    if (input === correctWord) {
+      message.textContent = "Cryptex unlocked! You found the next clue!";
+    } else {
+      message.textContent = "That's not the word. Try again.";
+    }
+  }
+</script>
