@@ -5,20 +5,14 @@
   <title>Escape Room Adventure</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Georgia', serif;
       text-align: center;
       padding: 50px;
       background: #f4f4f4;
-      position: relative;
     }
 
-    .scene {
-      display: none;
-    }
-
-    .scene.active {
-      display: block;
-    }
+    .scene { display: none; }
+    .scene.active { display: block; }
 
     .mirror {
       width: 200px;
@@ -27,9 +21,8 @@
       background: #ccc;
       border: 2px solid #999;
       border-radius: 10px;
-      position: relative;
-      overflow: hidden;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+      position: relative;
     }
 
     .mirror-text {
@@ -43,9 +36,7 @@
       transition: opacity 0.5s ease;
     }
 
-    .light-on .mirror-text {
-      opacity: 1;
-    }
+    .light-on .mirror-text { opacity: 1; }
 
     .drawer-container {
       position: relative;
@@ -59,14 +50,12 @@
       background: linear-gradient(to bottom, #8B4513, #A0522D);
       border: 4px solid #5C4033;
       border-radius: 10px;
-      position: relative;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       transition: transform 1s ease;
+      position: relative;
     }
 
-    .drawer.open {
-      transform: translateY(50px);
-    }
+    .drawer.open { transform: translateY(50px); }
 
     .handle {
       width: 60px;
@@ -100,10 +89,6 @@
       cursor: pointer;
     }
 
-    .keypad button:hover {
-      background: #ddd;
-    }
-
     #codeDisplay {
       margin-top: 20px;
       font-size: 1.2em;
@@ -117,7 +102,7 @@
 
     #key {
       position: absolute;
-      top: 60px;
+      top: 5px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 2em;
@@ -147,11 +132,6 @@
       align-items: center;
       justify-content: center;
       font-size: 1.5em;
-      transition: background 0.3s ease;
-    }
-
-    .light-switch:hover {
-      background: #ccc;
     }
 
     #trunk {
@@ -168,14 +148,35 @@
       left: 0;
       width: 100%;
       height: 50%;
-      background: linear-gradient(to bottom, #4b2e1e, #6b3f2c);
+      background: linear-gradient(to top, #4b2e1e, #6b3f2c);
       border-bottom: 4px solid #3e2a1c;
+      border-radius: 12px 12px 0 0;
       transform-origin: bottom center;
       transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-      transition: transform 1s ease;
+      box-shadow: inset 0 -2px 6px rgba(0,0,0,0.3), 0 4px 10px rgba(0,0,0,0.4);
       z-index: 2;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
+
+    #trunk-lid,
+    #trunk-base {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #trunk-lid {
+      transform-origin: bottom center;
+      transform: rotateX(0deg); /* default */
+    }
+    
+    #trunk.open #trunk-lid {
+      transform: rotateX(-135deg); /* slightly less extreme */
+    }
+
+    #trunk-lid {
+      margin-right: -2px;
+      border-radius: 12px 12px 0 0;
+    }
+
 
     #trunk.open #trunk-lid {
       transform: rotateX(-140deg);
@@ -222,99 +223,159 @@
     }
 
 
-    #letterClue {
-      display: none;
-      margin-top: 20px;
-      padding: 20px;
+
+
+    .scene-content {
+      margin-top: 30px;
+    }
+
+    #peppermint {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: repeating-conic-gradient(red 0deg 30deg, white 30deg 60deg);
+      border: 2px solid #aaa;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      margin: 20px auto;
+      cursor: grab;
+    }
+
+    #clock {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border: 6px solid #333;
+      border-radius: 50%;
       background: #fdf5e6;
-      border: 2px solid #d2b48c;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      font-family: 'Georgia', serif;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-      animation: slideDown 1s ease forwards;
+      margin: 20px auto;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
     }
 
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      background: #333;
     }
 
-    #cryptexPuzzle {
-      display: none;
-      margin-top: 20px;
+    .hour {
+      width: 6px;
+      height: 50px;
+      transform: translateX(-50%) rotate(165deg);
     }
 
-    #cryptexInput {
-      font-size: 1.2em;
-      letter-spacing: 5px;
-      padding: 5px;
+    .minute {
+      width: 4px;
+      height: 70px;
+      transform: translateX(-50%) rotate(292deg);
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #333;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .time-slot {
+      width: 40px;
+      font-size: 1.5em;
+      text-align: center;
+      margin: 0 5px;
     }
   </style>
 </head>
 <body>
-  <!-- Scene 1 -->
-  <div class="scene active" id="scene1">
-    <h1>Escape Room: Locked Drawer</h1>
 
-    <div class="mirror" id="mirror">
-      <div class="mirror-text">Code: 4729</div>
-    </div>
+<!-- Scene 1 -->
+<div class="scene active" id="scene1">
+  <h1>Escape Room: Locked Drawer</h1>
+  <div class="mirror" id="mirror">
+    <div class="mirror-text">Code: 4729</div>
+  </div>
 
-    <div class="drawer-container">
-      <div class="drawer" id="drawer">
-        <div class="handle"></div>
-        <div class="keypad">
-          <button onclick="pressKey('1')">1</button>
-          <button onclick="pressKey('2')">2</button>
-          <button onclick="pressKey('3')">3</button>
-          <button onclick="pressKey('4')">4</button>
-          <button onclick="pressKey('5')">5</button>
-          <button onclick="pressKey('6')">6</button>
-          <button onclick="pressKey('7')">7</button>
-          <button onclick="pressKey('8')">8</button>
-          <button onclick="pressKey('9')">9</button>
-          <button onclick="pressKey('0')">0</button>
-          <button onclick="backspace()">←</button>
-          <button onclick="checkCode()">✔</button>
-        </div>
+  <div class="drawer-container">
+    <div class="drawer" id="drawer">
+      <div class="handle"></div>
+      <div class="keypad">
+        <button onclick="pressKey('1')">1</button>
+        <button onclick="pressKey('2')">2</button>
+        <button onclick="pressKey('3')">3</button>
+        <button onclick="pressKey('4')">4</button>
+        <button onclick="pressKey('5')">5</button>
+        <button onclick="pressKey('6')">6</button>
+        <button onclick="pressKey('7')">7</button>
+        <button onclick="pressKey('8')">8</button>
+        <button onclick="pressKey('9')">9</button>
+        <button onclick="pressKey('0')">0</button>
+        <button onclick="backspace()">←</button>
+        <button onclick="checkCode()">✔</button>
       </div>
-      <div id="key" onclick="goToTrunkScene()">🗝️</div>
     </div>
-
-    <div class="light-switch" onclick="toggleLight()">💡</div>
-
-    <div id="codeDisplay">Code: <span id="codeInput"></span></div>
-    <p id="message"></p>
+    <div id="key" onclick="goToTrunkScene()">🗝️</div>
   </div>
 
-  <!-- Scene 2 -->
-  <div class="scene" id="scene2">
-    <h1>The Trunk</h1>
-    <div id="trunk">
-      <div id="trunk-lid"></div>
-      <div id="trunk-base"></div>
-      <div id="keyhole" onclick="openTrunk()"></div>
-    </div>
+  <div class="light-switch" onclick="toggleLight()">💡</div>
+  <div id="codeDisplay">Code: <span id="codeInput"></span></div>
+  <p id="message"></p>
+</div>
 
-    <div id="letterClue">
-      <p>Dearest Evelyn,</p>
-      <p>If you’ve found this, then the old trunk has finally been opened. I knew you’d be the one to solve it.</p>
-      <p>The answer lies in the tradition we cherished every October 31st — when costumes came out, lanterns were lit, and laughter echoed through the halls. Remember the joy of knocking on doors, the thrill of the unknown, and the sweet reward that always followed?</p>
-      <p>That word — the one whispered with glee by children in the night — is the key to what comes next.</p>
-      <p>With love,<br>Grandfather</p>
-    </div>
-
-    <div id="cryptexPuzzle">
-      <p>Enter the 5-letter word to unlock the cryptex:</p>
-      <input type="text" id="cryptexInput" maxlength="5" />
-      <button onclick="checkCryptex()">Unlock</button>
-      <p id="cryptexMessage"></p>
-    </div>
+<!-- Scene 2 -->
+<div class="scene" id="scene2">
+  <h1>The Trunk</h1>
+  <div id="trunk">
+    <div id="trunk-lid"></div>
+    <div id="trunk-base"></div>
+    <div id="keyhole" onclick="openTrunk()"></div>
   </div>
 
+  <div class="scene-content" id="letterClue" style="display:none;">
+    <p>Dearest Evelyn,</p>
+    <p>The answer lies in the tradition we cherished every October 31st — when costumes came out, lanterns were lit, and laughter echoed through the halls. That word — the one whispered with glee by children in the night — is the key to what comes next.</p>
+    <p>With love,<br>Grandfather</p>
+  </div>
 
+  <div class="scene-content" id="cryptexPuzzle" style="display:none;">
+    <p>Enter the 5-letter word to unlock the cryptex:</p>
+    <input type="text" id="cryptexInput" maxlength="5" />
+    <button onclick="checkCryptex()">Unlock</button>
+    <p id="cryptexMessage"></p>
+  </div>
+
+  <div class="scene-content" id="peppermintScene" style="display:none;">
+    <div id="clockDropZone" ondrop="dropCandy(event)" ondragover="allowDrop(event)">
+      <div id="clock">
+        <div class="hand hour"></div>
+        <div class="hand minute"></div>
+        <div class="center-dot"></div>
+      </div>
+    </div>
+    <div id="peppermint" draggable="true" ondragstart="dragCandy(event)"></div>
+  </div>
+
+  <!-- Scroll Clue -->
+  <div class="scene-content" id="scrollClue" style="display:none;">
+    <p><strong>Jeremy’s Journal Entry:</strong></p>
+    <p>Bill always retires three hours before midnight. Ted sleeps 35 minutes before an hour after Bill. I sleep 17 minutes after Ted.</p>
+    <p>They tease me for my punctuality, but I know the importance of timing. The final chamber opens only when the clock strikes true.</p>
+  </div>
+
+  <!-- Time Entry -->
+  <div class="scene-content" id="timeEntry" style="display:none;">
+    <p>Enter the time:</p>
+    <input type="text" maxlength="2" class="time-slot" id="hour1" /> :
+    <input type="text" maxlength="2" class="time-slot" id="minute1" />
+    <button onclick="checkFormattedTime()">Submit</button>
+    <p id="timeMessage"></p>
+  </div>
+</div>
+
+<!-- JavaScript -->
 <script>
   // Scene 1: Drawer puzzle
   const correctCode = "4729";
@@ -351,40 +412,64 @@
     document.getElementById("mirror").classList.toggle("light-on");
   }
 
-  // Scene transition: key click → trunk scene
   function goToTrunkScene() {
     document.getElementById("scene1").classList.remove("active");
     document.getElementById("scene2").classList.add("active");
   }
 
-  // Trunk interaction
   function openTrunk() {
     const trunk = document.getElementById("trunk");
-    const lid = document.getElementById("trunk-lid");
-    const letter = document.getElementById("letterClue");
-    const puzzle = document.getElementById("cryptexPuzzle");
-
     trunk.classList.add("open");
-    setTimeout(() => {
-      lid.style.transform = "rotateX(-140deg)";
-    }, 100); // slight delay for realism
-    
-    setTimeout(() => {
-      letter.style.display = "block";
-      puzzle.style.display = "block";
-    }, 1200); // reveal after lid opens
-    }
 
-  // Cryptex puzzle
+    setTimeout(() => {
+      document.getElementById("letterClue").style.display = "block";
+      document.getElementById("cryptexPuzzle").style.display = "block";
+    }, 1200);
+  }
+
   function checkCryptex() {
     const input = document.getElementById("cryptexInput").value.toLowerCase();
     const message = document.getElementById("cryptexMessage");
-    const correctWord = "treat";
 
-    if (input === correctWord) {
-      message.textContent = "Cryptex unlocked! You found the next clue!";
+    if (input === "treat") {
+      message.textContent = "Cryptex unlocked!";
+      document.getElementById("cryptexPuzzle").style.display = "none";
+      document.getElementById("peppermintScene").style.display = "block";
     } else {
       message.textContent = "That's not the word. Try again.";
     }
   }
+
+  function dragCandy(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function dropCandy(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    if (data === "peppermint") {
+      document.getElementById("peppermintScene").style.display = "none";
+      document.getElementById("scrollClue").style.display = "block";
+      document.getElementById("timeEntry").style.display = "block";
+    }
+  }
+
+  function checkFormattedTime() {
+    const h = document.getElementById("hour1").value;
+    const m = document.getElementById("minute1").value;
+    const message = document.getElementById("timeMessage");
+
+    if (h === "09" && m === "42") {
+      message.textContent = "Correct! The final chamber awaits...";
+      // Trigger next scene or reveal here
+    } else {
+      message.textContent = "That’s not quite right.";
+    }
+  }
 </script>
+</body>
+</html>
